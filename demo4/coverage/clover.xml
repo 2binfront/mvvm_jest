@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1658319173937" clover="3.2.0">
+  <project timestamp="1658319173938" name="All files">
+    <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1" elements="5" coveredelements="5" complexity="0" loc="4" ncloc="4" packages="1" files="1" classes="1"/>
+    <file name="baiduLink.js" path="F:\web\project\mvvm_jest\demo4\baiduLink.js">
+      <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <line num="3" count="1" type="stmt"/>
+      <line num="4" count="1" type="stmt"/>
+      <line num="5" count="1" type="stmt"/>
+      <line num="6" count="1" type="stmt"/>
+    </file>
+  </project>
+</coverage>

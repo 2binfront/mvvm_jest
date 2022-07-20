@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布订阅模式</title>
+</head>
+<body>
+    <input type="text" id="input">
+    <script>
+        let obj = {};
+        let value = "";
+
+        Object.defineProperty(obj, "msg", {
+            set: function(newValue){
+                console.log("set func exec");
+
+                document.querySelector("#app").innerHTML = newValue;
+                value = newValue;
+            },
+            get: function(){
+                console.log("get func exec");
+                return value;
+            }
+        })
+    </script>
+</body>
+</html>
