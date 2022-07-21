@@ -7,23 +7,44 @@
     <title>发布订阅模式</title>
 </head>
 <body>
-    <input type="text" id="input">
+    
+    <button onclick="sell()">尾盘开售</button>
     <script>
-        let obj = {};
-        let value = "";
 
-        Object.defineProperty(obj, "msg", {
-            set: function(newValue){
-                console.log("set func exec");
+        //透露着一股腐败的气息
 
-                document.querySelector("#app").innerHTML = newValue;
-                value = newValue;
-            },
-            get: function(){
-                console.log("get func exec");
-                return value;
-            }
-        })
+        //事件处理中心
+        function EventHandle(){
+            let subs=[];
+
+            this.addSub = function(sub){
+                sub && subs.push(sub);
+            };
+
+            this.notify = function(){
+                subs.forEach(function(sub){
+                    sub.update();
+                });
+            };
+        }
+
+        let ev = new EventHandle();
+
+        function sell(){
+            console.log("尾盘开售了");
+            ev.notify();
+        }
+
+        (function Ming(){
+            let myName = "xiao ming";
+            ev.addSub({
+                update: function(){
+                    console.log(myName + 'notification received');
+                }
+            });
+        })();
+
+
     </script>
 </body>
 </html>
