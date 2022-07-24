@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1658504314472" clover="3.2.0">
+  <project timestamp="1658504314472" name="All files">
+    <metrics statements="133" coveredstatements="59" conditionals="35" coveredconditionals="8" methods="41" coveredmethods="17" elements="209" coveredelements="84" complexity="0" loc="133" ncloc="133" packages="1" files="5" classes="5"/>
+    <file name="compiler.ts" path="F:\web\project\mvvm_jest\lightfulMVVM\src\compiler.ts">
+      <metrics statements="67" coveredstatements="13" conditionals="23" coveredconditionals="0" methods="17" coveredmethods="2"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="4" count="1" type="stmt"/>
+      <line num="11" count="1" type="stmt"/>
+      <line num="12" count="1" type="stmt"/>
+      <line num="13" count="1" type="cond" truecount="0" falsecount="1"/>
+      <line num="15" count="0" type="stmt"/>
+      <line num="16" count="0" type="stmt"/>
+      <line num="18" count="0" type="stmt"/>
+      <line num="21" count="0" type="stmt"/>
+      <line num="30" count="1" type="stmt"/>
+      <line num="31" count="0" type="stmt"/>
+      <line num="32" count="0" type="cond" truecount="0" falsecount="3"/>
+      <line num="33" count="0" type="stmt"/>
+      <line num="36" count="0" type="cond" truecount="0" falsecount="1"/>
+      <line num="37" count="0" type="stmt"/>
+      <line num="41" count="0" type="stmt"/>
+      <line num="48" count="1" type="stmt"/>
+      <line num="50" count="0" type="stmt"/>
+      <line num="51" count="0" type="stmt"/>
+      <line num="60" count="1" type="stmt"/>
+      <line num="61" count="0" type="cond" truecount="0" falsecount="3"/>
+      <line num="62" count="0" type="stmt"/>
+      <line num="64" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="65" count="0" type="stmt"/>
+      <line num="67" count="0" type="cond" truecount="0" falsecount="1"/>
+      <line num="68" count="0" type="stmt"/>
+      <line num="79" count="1" type="stmt"/>
+      <line num="80" count="0" type="stmt"/>
+      <line num="81" count="0" type="stmt"/>
+      <line num="82" count="0" type="stmt"/>
+      <line num="84" count="0" type="stmt"/>
+      <line num="86" count="0" type="cond" truecount="0" falsecount="1"/>
+      <line num="87" count="0" type="stmt"/>
+      <line num="88" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="92" count="0" type="stmt"/>
+      <line num="93" count="0" type="stmt"/>
+      <line num="95" count="0" type="stmt"/>
+      <line num="99" count="0" type="stmt"/>
+      <line num="100" count="0" type="stmt"/>
+      <line num="102" count="0" type="stmt"/>
+      <line num="103" count="0" type="stmt"/>
+      <line num="105" count="0" type="stmt"/>
+      <line num="108" count="0" type="cond" truecount="0" falsecount="1"/>
+      <line num="109" count="0" type="stmt"/>
+      <line num="112" count="0" type="stmt"/>
+      <line num="122" count="1" type="stmt"/>
+      <line num="124" count="0" type="stmt"/>
+      <line num="126" count="0" type="stmt"/>
+      <line num="127" count="0" type="stmt"/>
+      <line num="134" count="1" type="stmt"/>
+      <line num="135" count="0" type="stmt"/>
+      <line num="136" count="0" type="cond" truecount="0" falsecount="1"/>
+      <line num="138" count="0" type="stmt"/>
+      <line num="140" count="0" type="stmt"/>
+      <line num="146" count="0" type="stmt"/>
+      <line num="147" count="0" type="stmt"/>
+      <line num="159" count="1" type="stmt"/>
+      <line num="161" count="0" type="stmt"/>
+      <line num="163" count="0" type="stmt"/>
+      <line num="168" count="0" type="stmt"/>
+      <line num="172" count="0" type="stmt"/>
+      <line num="173" count="0" type="stmt"/>
+      <line num="174" count="0" type="cond" truecount="0" falsecount="4"/>
+      <line num="175" count="0" type="stmt"/>
+      <line num="177" count="0" type="stmt"/>
+      <line num="180" count="0" type="stmt"/>
+      <line num="182" count="1" type="stmt"/>
+    </file>
+    <file name="dep.ts" path="F:\web\project\mvvm_jest\lightfulMVVM\src\dep.ts">
+      <metrics statements="8" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="2"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="6" count="1" type="stmt"/>
+      <line num="9" count="1" type="stmt"/>
+      <line num="10" count="0" type="stmt"/>
+      <line num="13" count="1" type="stmt"/>
+      <line num="14" count="0" type="stmt"/>
+      <line num="15" count="0" type="stmt"/>
+      <line num="18" count="1" type="stmt"/>
+    </file>
+    <file name="index.ts" path="F:\web\project\mvvm_jest\lightfulMVVM\src\index.ts">
+      <metrics statements="20" coveredstatements="18" conditionals="5" coveredconditionals="4" methods="8" coveredmethods="6"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="2" count="1" type="stmt"/>
+      <line num="4" count="1" type="stmt"/>
+      <line num="16" count="1" type="stmt"/>
+      <line num="19" count="1" type="cond" truecount="1" falsecount="1"/>
+      <line num="22" count="1" type="stmt"/>
+      <line num="23" count="1" type="stmt"/>
+      <line num="26" count="1" type="stmt"/>
+      <line num="29" count="1" type="stmt"/>
+      <line num="37" count="1" type="stmt"/>
+      <line num="38" count="1" type="stmt"/>
+      <line num="39" count="1" type="stmt"/>
+      <line num="41" count="0" type="stmt"/>
+      <line num="44" count="0" type="stmt"/>
+      <line num="54" count="1" type="stmt"/>
+      <line num="55" count="1" type="cond" truecount="3" falsecount="0"/>
+      <line num="56" count="1" type="stmt"/>
+      <line num="57" count="1" type="stmt"/>
+      <line num="61" count="1" type="stmt"/>
+      <line num="63" count="1" type="stmt"/>
+    </file>
+    <file name="observer.ts" path="F:\web\project\mvvm_jest\lightfulMVVM\src\observer.ts">
+      <metrics statements="18" coveredstatements="16" conditionals="5" coveredconditionals="4" methods="7" coveredmethods="6"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="3" count="1" type="stmt"/>
+      <line num="8" count="1" type="stmt"/>
+      <line num="11" count="1" type="stmt"/>
+      <line num="18" count="2" type="stmt"/>
+      <line num="19" count="2" type="cond" truecount="3" falsecount="0"/>
+      <line num="20" count="1" type="stmt"/>
+      <line num="22" count="1" type="stmt"/>
+      <line num="23" count="1" type="stmt"/>
+      <line num="34" count="1" type="stmt"/>
+      <line num="35" count="1" type="stmt"/>
+      <line num="36" count="1" type="stmt"/>
+      <line num="45" count="3" type="cond" truecount="1" falsecount="1"/>
+      <line num="46" count="3" type="stmt"/>
+      <line num="51" count="0" type="stmt"/>
+      <line num="52" count="0" type="stmt"/>
+      <line num="57" count="1" type="stmt"/>
+      <line num="59" count="1" type="stmt"/>
+    </file>
+    <file name="watcher.ts" path="F:\web\project\mvvm_jest\lightfulMVVM\src\watcher.ts">
+      <metrics statements="20" coveredstatements="7" conditionals="2" coveredconditionals="0" methods="5" coveredmethods="1"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="4" count="1" type="stmt"/>
+      <line num="5" count="1" type="stmt"/>
+      <line num="14" count="0" type="stmt"/>
+      <line num="15" count="0" type="stmt"/>
+      <line num="16" count="0" type="stmt"/>
+      <line num="17" count="0" type="stmt"/>
+      <line num="18" count="0" type="stmt"/>
+      <line num="24" count="1" type="stmt"/>
+      <line num="28" count="0" type="stmt"/>
+      <line num="29" count="0" type="stmt"/>
+      <line num="30" count="0" type="stmt"/>
+      <line num="31" count="0" type="stmt"/>
+      <line num="37" count="1" type="stmt"/>
+      <line num="38" count="0" type="stmt"/>
+      <line num="39" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="42" count="1" type="stmt"/>
+      <line num="47" count="0" type="stmt"/>
+      <line num="48" count="0" type="stmt"/>
+      <line num="50" count="1" type="stmt"/>
+    </file>
+  </project>
+</coverage>

@@ -5,8 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>demo</title>
+    <style>
+        p:hover {color: #ff0000};
+    </style>
+    <script src="../dist/vue.js"></script>
 </head>
 <body>
-    <script src="../dist/vue.js"></script>
+    <div id="app">
+        <p>{{msg}}</p>
+        <p v-text="msg"></p>
+        <input type="text" v-model="msg">
+        <button @click="handleClick">click</button>
+        
+    </div>
+
+    
+    <script>
+        let vm=new Vue({
+            el:'#app',
+            data:{
+                msg:'hello world'
+            },
+            methods: {
+                handleClick() {
+                    console.log('handleClick', this.msg);
+            }
+        }
+        })
+    </script>
 </body>
 </html>

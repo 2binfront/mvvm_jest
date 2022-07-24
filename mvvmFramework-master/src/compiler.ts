@@ -1,9 +1,9 @@
-import Watcher from "./wacther";
+import Watcher from "./watcher";
 
-// 进行模板编译
+// 进行模板编译，或者说页面数据渲染
 export default class Compiler {
-  $el: any;
-  context: any;
+  $el: DocumentFragment;
+  context: object;
   $fragment: DocumentFragment;
   constructor(context) {
     this.$el = context.$el;
