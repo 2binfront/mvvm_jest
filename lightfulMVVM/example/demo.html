@@ -12,10 +12,13 @@
 </head>
 <body>
     <div id="app">
-        <p>{{msg}}</p>
-        <p v-text="msg"></p>
+        <h2>这里的内容是："\{\{msg\}\}"，{{msg}}，</h2>
+        <p>下面一行的是带 v-text=“msg” 属性的 h2 标签</p>
+        <h2 v-text="msg"></h2>
+        <p>接下来是带 v-model="msg" 的输入框和 带 @click="handleClick" 的按钮，在文本框中输入内容会实时更改 msg 的值，也就是数据双向绑定，点击按钮会在控制台中输出 msg 的值，这是 demo 内置的 handleClick 方法</p>
         <input type="text" v-model="msg">
         <button @click="handleClick">click</button>
+        <p>尝试在文本框中输入其它的值，看看会有什么变化</p>
         
     </div>
 
