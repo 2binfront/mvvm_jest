@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "sourceMap": true,
+    "declaration":true,
+    "skipLibCheck": true,
+    "declarationDir": "dist",
+    "strict": true,
+    "baseUrl":"./",
+  },
+  "include": ["./src/"]
+}

@@ -1,0 +1,86 @@
+{
+  "name": "@fe_korey/mvvm",
+  "version": "3.0.0-rc.3",
+  "description": "A simple mvvm library",
+  "keywords": [
+    "framework",
+    "mvvm",
+    "template",
+    "modular",
+    "frontend",
+    "component",
+    "similar vue"
+  ],
+  "main": "dist/mvvm.umd.js",
+  "module": "dist/mvvm.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "dev": "node scripts/dev.js",
+    "release": "node scripts/release.js",
+    "lint": "eslint 'src/**/*.ts'",
+    "fix": "eslint 'src/**/*.ts' --fix && prettier --write --parser typescript \"src/**/*.ts\" ",
+    "test": "jest",
+    "codecov": "codecov"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**",
+      "!src/utils.ts"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "eslint --fix",
+      "prettier --parser=typescript --write"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zhaoky/mvvm.git"
+  },
+  "bugs": "https://github.com/zhaoky/mvvm/issues",
+  "author": "Korey <keyu.zhao@foxmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-transform-runtime": "^7.11.5",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-typescript": "^7.10.4",
+    "@babel/runtime-corejs3": "^7.11.2",
+    "@microsoft/api-extractor": "^7.9.11",
+    "@rollup/plugin-babel": "^5.2.0",
+    "@rollup/plugin-commonjs": "^15.0.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
+    "@types/jest": "^26.0.13",
+    "@typescript-eslint/eslint-plugin": "^4.0.1",
+    "@typescript-eslint/parser": "^4.0.1",
+    "babel-loader": "^8.1.0",
+    "brotli": "^1.3.2",
+    "chalk": "^4.1.0",
+    "codecov": "^3.7.2",
+    "coveralls": "^3.1.0",
+    "eslint": "^7.8.1",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "execa": "^4.0.3",
+    "fs-extra": "^9.0.1",
+    "html-webpack-plugin": "^4.4.1",
+    "husky": "^4.2.5",
+    "jest": "^26.4.2",
+    "lint-staged": "^10.3.0",
+    "prettier": "^2.1.1",
+    "rollup": "^2.26.10",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.27.2",
+    "typescript": "^4.0.2",
+    "zlib": "^1.0.5"
+  }
+}
