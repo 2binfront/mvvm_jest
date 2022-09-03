@@ -15,7 +15,7 @@ export default class Observer{
      * 遍历data的一层
      * @param data 
      */
-    walk(data: object){
+    walk(data: Record<string, any>){
         if(!data || typeof data !== "object"){
             return;
         }

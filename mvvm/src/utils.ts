@@ -248,6 +248,7 @@ export function dirNameHasOn(dirName: string): boolean {
 export function _toString(value: string): string {
   return value == null ? "" : value.toString();
 }
+
 /**
  * 简易深拷贝
  *
@@ -277,6 +278,7 @@ export function cloneDeep<T>(source: T): T {
 
   return target as T;
 }
+
 /**
  * 生成文档片段
  *

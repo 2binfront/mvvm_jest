@@ -113,6 +113,7 @@ export default class BaseParser implements ParserBaseClass {
    * @memberof ModelParser
    */
   public watcher: WatcherClass | null = null;
+  
   /**
    * Creates an instance of BaseParser.
    * @param {ParserOption} option

@@ -334,6 +334,42 @@ function isPC() {
  */
 class BaseParser {
     /**
+     * 包含指令的节点
+     *
+     * @type {HTMLElement}
+     * @memberof BaseParser
+     */
+    el;
+    /**
+     * 指令名称
+     *
+     * @type {string}
+     * @memberof BaseParser
+     */
+    dirName;
+    /**
+     * 指令值
+     *
+     * @type {string}
+     * @memberof BaseParser
+     */
+    dirValue;
+    /**
+     * Compiler
+     *
+     * @type {CompilerClass}
+     * @memberof BaseParser
+     */
+    cs;
+    /**
+     * watcher 类
+     *
+     * @private
+     * @type {(WatcherClass | null)}
+     * @memberof ModelParser
+     */
+    watcher = null;
+    /**
      * Creates an instance of BaseParser.
      * @param {ParserOption} option
      * @param {HTMLElement} option.node [包含指令的 dom 节点]
@@ -343,14 +379,6 @@ class BaseParser {
      * @memberof BaseParser
      */
     constructor({ node, dirName, dirValue, cs }) {
-        /**
-         * watcher 类
-         *
-         * @private
-         * @type {(WatcherClass | null)}
-         * @memberof ModelParser
-         */
-        this.watcher = null;
         node && (this.el = node);
         dirName && (this.dirName = dirName);
         dirValue && (this.dirValue = dirValue);
@@ -384,16 +412,13 @@ class TextParser extends BaseParser {
  * @extends {BaseParser}
  */
 class StyleParser extends BaseParser {
-    constructor() {
-        super(...arguments);
-        /**
-         * 是否为深度依赖
-         *
-         * @type {boolean}
-         * @memberof StyleParser
-         */
-        this.deep = true;
-    }
+    /**
+     * 是否为深度依赖
+     *
+     * @type {boolean}
+     * @memberof StyleParser
+     */
+    deep = true;
     /**
      * style刷新视图函数
      *
@@ -447,15 +472,21 @@ class ClassParser extends BaseParser {
  * @class Dep
  */
 class Dep {
-    constructor() {
-        /**
-         * 订阅中心(该对象收集到的需要通知 path 及对应 watcher（节点）列表)
-         *
-         * @type {Record<string, Set<WatcherClass>>}
-         * @memberof Dep
-         */
-        this.depCenter = {};
-    }
+    /**
+     * 订阅中心(该对象收集到的需要通知 path 及对应 watcher（节点）列表)
+     *
+     * @type {Record<string, Set<WatcherClass>>}
+     * @memberof Dep
+     */
+    depCenter = {};
+    /**
+     * 当前watcher
+     *
+     * @static
+     * @type {WatcherClass}
+     * @memberof Dep
+     */
+    static curWatcher = null;
     /**
      * 为 watcher 收集订阅者
      *
@@ -539,14 +570,6 @@ class Dep {
         }
     }
 }
-/**
- * 当前watcher
- *
- * @static
- * @type {WatcherClass}
- * @memberof Dep
- */
-Dep.curWatcher = null;
 
 /**
  * 监测数据模型
@@ -555,20 +578,20 @@ Dep.curWatcher = null;
  */
 class Observer {
     /**
+     * 数据值
+     *
+     * @private
+     * @type {any}
+     * @memberof Observer
+     */
+    data = null;
+    /**
      *Creates an instance of Observer.
      * @param {any} data [需要监听的数据]
      * @param {string} path [订阅key(路径标识)]
      * @memberof Observer
      */
     constructor(data, path) {
-        /**
-         * 数据值
-         *
-         * @private
-         * @type {any}
-         * @memberof Observer
-         */
-        this.data = null;
         if (data.__proxy === 1) {
             this.data = data;
             return;
@@ -597,9 +620,9 @@ class Observer {
         });
         const handler = {
             get(target, property) {
-                if (!target.hasOwnProperty(property) && typeof property === "symbol") {
-                    return Reflect.get(target, property);
-                }
+                // if (!target.hasOwnProperty(property) && typeof property === "symbol") {
+                //   return Reflect.get(target, property);
+                // }
                 // 订阅中心开始收集watcher依赖
                 if (Dep.curWatcher) {
                     dep.collectDep(`${path}____proxy`);
@@ -626,9 +649,8 @@ class Observer {
                 }
                 dep.beforeNotfiy(`${path}__${property}`);
                 target[property] = new Observer(value, `${path}__${property}`).getData();
-                Reflect.set(target, property, target[property]);
                 dep.notfiy(`${path}__${property}`, arrArgs);
-                return true;
+                return Reflect.set(target, property, target[property]);
             },
         };
         const proxy = new Proxy(data, handler);
@@ -660,6 +682,64 @@ class Observer {
  */
 class ForParser extends BaseParser {
     /**
+     * item别名
+     *
+     * @private
+     * @memberof ForParser
+     */
+    alias = "";
+    /**
+     * 独特的__vfor__
+     *
+     * @private
+     * @memberof ForParser
+     */
+    symbol = Symbol();
+    /**
+     * 含有alias,$index对象的数组
+     *
+     * @private
+     * @type {Record<string, any>[]}
+     * @memberof ForParser
+     */
+    scopes = [];
+    /**
+     * 父节点
+     *
+     * @private
+     * @type {Node}
+     * @memberof ForParser
+     */
+    parent = null;
+    /**
+     * 终止节点
+     *
+     * @private
+     * @type {Node}
+     * @memberof ForParser
+     */
+    end = null;
+    /**
+     * 是否是首次渲染
+     *
+     * @private
+     * @memberof ForParser
+     */
+    isInit = true;
+    /**
+     * 位置索引
+     *
+     * @private
+     * @memberof ForParser
+     */
+    $index = "";
+    /**
+     * 是否为深度依赖
+     *
+     * @memberof ForParser
+     */
+    deep = true;
+    /**
      *Creates an instance of ForParser.
      * @param {ParserOption} options
      * @param {HTMLElement} option.node [包含指令的 dom 节点]
@@ -669,64 +749,6 @@ class ForParser extends BaseParser {
      */
     constructor({ node, dirName, dirValue, cs }) {
         super({ node, dirName, dirValue, cs });
-        /**
-         * item别名
-         *
-         * @private
-         * @memberof ForParser
-         */
-        this.alias = "";
-        /**
-         * 独特的__vfor__
-         *
-         * @private
-         * @memberof ForParser
-         */
-        this.symbol = Symbol();
-        /**
-         * 含有alias,$index对象的数组
-         *
-         * @private
-         * @type {Record<string, any>[]}
-         * @memberof ForParser
-         */
-        this.scopes = [];
-        /**
-         * 父节点
-         *
-         * @private
-         * @type {Node}
-         * @memberof ForParser
-         */
-        this.parent = null;
-        /**
-         * 终止节点
-         *
-         * @private
-         * @type {Node}
-         * @memberof ForParser
-         */
-        this.end = null;
-        /**
-         * 是否是首次渲染
-         *
-         * @private
-         * @memberof ForParser
-         */
-        this.isInit = true;
-        /**
-         * 位置索引
-         *
-         * @private
-         * @memberof ForParser
-         */
-        this.$index = "";
-        /**
-         * 是否为深度依赖
-         *
-         * @memberof ForParser
-         */
-        this.deep = true;
         this.parseValue(dirValue);
         this.parent = node.parentNode;
         if (this.parent.nodeType !== 1) {
@@ -916,6 +938,30 @@ class ForParser extends BaseParser {
  */
 class OnParser extends BaseParser {
     /**
+     * v-for作用域
+     *
+     * @private
+     * @type {Record<string, any> | null}
+     * @memberof OnParser
+     */
+    scope;
+    /**
+     * 事件类型
+     *
+     * @private
+     * @type {string}
+     * @memberof OnParser
+     */
+    handlerType;
+    /**
+     * 事件函数
+     *
+     * @private
+     * @type {OnHandlerInterface}
+     * @memberof OnParser
+     */
+    handlerFn;
+    /**
      * 生成事件处理函数
      *
      * @private
@@ -984,6 +1030,22 @@ const VAILD_MODEL_ELEMENT = ["input", "select", "textarea"];
  */
 class ModelParser extends BaseParser {
     /**
+     * model中不同类型的解析器实例
+     *
+     * @private
+     * @type {ModelClass} [modal 实例]
+     * @memberof ModelParser
+     */
+    type = null;
+    /**
+     * 是否是多选
+     *
+     * @private
+     * @type {boolean}
+     * @memberof ModelSelect
+     */
+    multi = false;
+    /**
      *Creates an instance of ModelParser.
      * @param {ParserOption} options
      * @param {HTMLElement} option.node [包含指令的 dom 节点]
@@ -993,22 +1055,6 @@ class ModelParser extends BaseParser {
      */
     constructor({ node, dirName, dirValue, cs }) {
         super({ node, dirName, dirValue, cs });
-        /**
-         * model中不同类型的解析器实例
-         *
-         * @private
-         * @type {ModelClass} [modal 实例]
-         * @memberof ModelParser
-         */
-        this.type = null;
-        /**
-         * 是否是多选
-         *
-         * @private
-         * @type {boolean}
-         * @memberof ModelSelect
-         */
-        this.multi = false;
         this.type = this.selectType();
         this.addEvent();
     }
@@ -1230,6 +1276,30 @@ class DisplayParser extends BaseParser {
  */
 class IfParser extends BaseParser {
     /**
+     * 指令父节点
+     *
+     * @private
+     * @type {HTMLElement | null}
+     * @memberof IfParser
+     */
+    $parent = null;
+    /**
+     * 克隆的节点
+     *
+     * @private
+     * @type {HTMLElement | null}
+     * @memberof IfParser
+     */
+    elTpl = null;
+    /**
+     * 空文本节点
+     *
+     * @private
+     * @type {Text}
+     * @memberof IfParser
+     */
+    emptyNode;
+    /**
      *Creates an instance of IfParser.
      * @param {ParserOption} options
      * @param {HTMLElement} option.node [包含指令的 dom 节点]
@@ -1239,22 +1309,6 @@ class IfParser extends BaseParser {
      */
     constructor({ node, dirName, dirValue, cs }) {
         super({ node, dirName, dirValue, cs });
-        /**
-         * 指令父节点
-         *
-         * @private
-         * @type {HTMLElement | null}
-         * @memberof IfParser
-         */
-        this.$parent = null;
-        /**
-         * 克隆的节点
-         *
-         * @private
-         * @type {HTMLElement | null}
-         * @memberof IfParser
-         */
-        this.elTpl = null;
         this.$parent = this.el.parentNode;
         if (this.$parent.nodeType !== 1) {
             throw Error("v-if can't used in the root element!");
@@ -1320,64 +1374,36 @@ let id = 0;
  * @class Watcher
  */
 class Watcher {
+    // 数组item的作用域
+    scope = null;
+    //对应指令的解析器
+    parser;
+    //旧值
+    oldVal = null;
+    //通过getter获取到的最新值
+    value = null;
     /**
-     *Creates an instance of Watcher.
-     * @param {ParserBaseClass} parser [解析器]
-     * @param {Record<string, any>} scope [item作用域]
-     * @memberof Watcher
+     * 老的依赖 deps 列表
+     *
+     * @private
+     * @type {array}
+     * @memberof path[]
      */
-    constructor(parser, scope) {
-        /**
-         * 数组item的作用域
-         *
-         * @private
-         * @type {Record<string, any> | null}
-         * @memberof Watcher
-         */
-        this.scope = null;
-        /**
-         * 旧值
-         *
-         * @private
-         * @type {*}
-         * @memberof Watcher
-         */
-        this.oldVal = null;
-        /**
-         * 通过getter获取到的最新值
-         *
-         * @type {any}
-         * @memberof Watcher
-         */
-        this.value = null;
-        /**
-         * 老的依赖 deps 列表
-         *
-         * @private
-         * @type {array}
-         * @memberof path[]
-         */
-        this.deps = {
-            depCenterList: new Set(),
-            depMap: {},
-        };
-        /**
-         * 新的依赖 deps 列表
-         *
-         * @private
-         * @type {array}
-         * @memberof path[]
-         */
-        this.newDeps = {
-            depCenterList: new Set(),
-            depMap: {},
-        };
-        this.id = 0;
-        this.parser = parser;
-        this.scope = scope;
-        this.value = this.get();
-        this.id = ++id;
-    }
+    deps = {
+        depCenterList: new Set(),
+        depMap: {},
+    };
+    /**
+     * 新的依赖 deps 列表
+     *
+     * @private
+     * @type {array}
+     * @memberof path[]
+     */
+    newDeps = {
+        depCenterList: new Set(),
+        depMap: {},
+    };
     /**
      * getter 函数
      *
@@ -1395,7 +1421,7 @@ class Watcher {
         }
     }
     /**
-     * 深度递归订阅遍历
+     * 深度递归订阅遍历， 深度递归遍历订阅
      *
      * @private
      * @param {any} target
@@ -1411,6 +1437,7 @@ class Watcher {
             this._walkThrough(target[keys[i]]);
         }
     }
+    id = 0;
     /**
      * 通过访问层级取值
      *
@@ -1520,6 +1547,18 @@ class Watcher {
             });
         });
     }
+    /**
+    *Creates an instance of Watcher.
+    * @param {ParserBaseClass} parser [解析器]
+    * @param {Record<string, any>} scope [item作用域]
+    * @memberof Watcher
+    */
+    constructor(parser, scope) {
+        this.parser = parser;
+        this.scope = scope;
+        this.value = this.get();
+        this.id = ++id;
+    }
 }
 
 /**
@@ -1529,57 +1568,28 @@ class Watcher {
  */
 class Compiler {
     /**
-     *Creates an instance of Compiler.
-     * @param {MVVMOption} option
-     * @param {MVVMClass} ms
+     * 编译根节点
+     *
+     * @private
+     * @type {HTMLElement}
      * @memberof Compiler
      */
-    constructor(option, ms) {
-        /**
-         * 编译根节点
-         *
-         * @private
-         * @type {HTMLElement}
-         * @memberof Compiler
-         */
-        this.$rootElement = null;
-        /**
-         * document缓存片段节点
-         *
-         * @private
-         * @type {DocumentFragment}
-         * @memberof Compiler
-         */
-        this.$fragment = null;
-        /**
-         * mvvm作用域
-         *
-         * @private
-         * @type {Record<string, any>}
-         * @memberof Compiler
-         */
-        this.ms = null;
-        /**
-         * 指令缓存队列
-         *
-         * @type {queueItem[]}
-         * @memberof Compiler
-         */
-        this.$queue = [];
-        this.$rootElement = option.view;
-        this.$mounted = option.mounted;
-        this.ms = ms;
-        if (isObject(option.methods)) {
-            const __eventHandler = (option.model["__eventHandler"] = {});
-            const methods = option.methods;
-            const keys = Object.keys(methods);
-            keys.forEach((key) => {
-                ms[key] = __eventHandler[key] = methods[key];
-            });
-        }
-        this.$fragment = nodeToFragment(this.$rootElement);
-        this.collectDir({ element: this.$fragment, isRoot: true, isInit: true });
-    }
+    $rootElement = null;
+    /**
+     * document缓存片段节点
+     *
+     * @private
+     * @type {DocumentFragment}
+     * @memberof Compiler
+     */
+    $fragment = null;
+    /**
+     * 编译完成后的回调
+     *
+     * @private
+     * @memberof Compiler
+     */
+    $mounted;
     /**
      * 解析元素节点收集到的每个指令
      *
@@ -1737,6 +1747,21 @@ class Compiler {
         }
     }
     /**
+     * mvvm作用域
+     *
+     * @private
+     * @type {Record<string, any>}
+     * @memberof Compiler
+     */
+    ms = null;
+    /**
+     * 指令缓存队列
+     *
+     * @type {queueItem[]}
+     * @memberof Compiler
+     */
+    $queue = [];
+    /**
      * - 收集节点所有需要编译的指令
      * - 并在收集完成后编译指令列表
      * @param {CollectDirOption} options
@@ -1774,6 +1799,27 @@ class Compiler {
             this.completed(isInit);
         }
     }
+    /**
+     *Creates an instance of Compiler.
+     * @param {MVVMOption} option
+     * @param {MVVMClass} ms
+     * @memberof Compiler
+     */
+    constructor(option, ms) {
+        this.$rootElement = option.view;
+        this.$mounted = option.mounted;
+        this.ms = ms;
+        if (isObject(option.methods)) {
+            const __eventHandler = (option.model["__eventHandler"] = {});
+            const methods = option.methods;
+            const keys = Object.keys(methods);
+            keys.forEach((key) => {
+                ms[key] = __eventHandler[key] = methods[key];
+            });
+        }
+        this.$fragment = nodeToFragment(this.$rootElement);
+        this.collectDir({ element: this.$fragment, isRoot: true, isInit: true });
+    }
 }
 
 /**
@@ -1784,32 +1830,12 @@ class Compiler {
  */
 class MVVM {
     /**
-     *Creates an instance of MVVM.
-     * @param {MvvmOptionInterface} option
+     * 数据模型对象
+     *
+     * @type {any}
      * @memberof MVVM
      */
-    constructor(option) {
-        /**
-         * 数据模型对象
-         *
-         * @type {any}
-         * @memberof MVVM
-         */
-        this.$data = {};
-        if (!isObject(option)) {
-            throw Error("data must be object.");
-        }
-        if (!option.view || (!!option.view && !isElement(option.view))) {
-            throw Error("data.view must be HTMLDivElement.");
-        }
-        if (!option.model || (!!option.model && !isObject(option.model))) {
-            throw Error("data.model must be object.");
-        }
-        //* ** 这里进入数据监听模块 ***/
-        this.$data = option.model = new Observer(option.model, `__data`).getData();
-        this._proxy();
-        new Compiler(option, this);
-    }
+    $data = {};
     /**
      * _proxy 函数
      *
@@ -1834,6 +1860,26 @@ class MVVM {
             });
         }
     }
+    /**
+     *Creates an instance of MVVM.
+     * @param {MvvmOptionInterface} option
+     * @memberof MVVM
+     */
+    constructor(option) {
+        if (!isObject(option)) {
+            throw Error("data must be object.");
+        }
+        if (!option.view || (!!option.view && !isElement(option.view))) {
+            throw Error("data.view must be HTMLDivElement.");
+        }
+        if (!option.model || (!!option.model && !isObject(option.model))) {
+            throw Error("data.model must be object.");
+        }
+        //* ** 这里进入数据监听模块 ***/
+        this.$data = option.model = new Observer(option.model, `__data`).getData();
+        this._proxy();
+        new Compiler(option, this);
+    }
 }
 
 // Public API ------------------------------------------------------------------
@@ -1842,4 +1888,4 @@ class MVVM {
 // export { DepClass } from "./dep";
 // export { CompilerClass, CompilerParseOption, ParserMaps } from "./compiler";
 
-export default MVVM;
+export { MVVM as default };

@@ -8,7 +8,11 @@
   <title>mvvm demo</title>
   <link rel="shortcut icon" type="image/ico" href="data:;" />
 </head>
+<style type="text/css">
 
+
+
+</style>
 <body>
   <div id='app'>
     <div>
@@ -47,12 +51,12 @@
       </span>
       <span v-for='(item,index) in list'>{{item}}|{{index}}|{{item+index}} </span>
     </div>
-    <div>
+    <!-- <div>
       多维 forParser：
       <div v-for='(item,index) in list2'>
         <span v-for='(i,ii) in item'>{{ii}} {{i.name}} {{i.age}} </span>
       </div>
-    </div>
+    </div> -->
     <div>
       modelParser-text:
       <input type='text' v-model='inputText.title' id="input" />{{inputText.title}}
@@ -84,7 +88,7 @@
       </select>
       <span>{{selected}}</span>
     </div>
-    <div>
+    <div >
       modelParser-select(多):
       <select v-model="selectedMult" multiple id='selectedMult'>
         <option value="apple">苹果</option>

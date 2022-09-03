@@ -1,16 +1,19 @@
 import { isArray, isObject } from "./utils";
 import Dep, { DepClass } from "./dep";
+
 export interface ArrArgs {
   receiver: any;
   property: string;
   value: any;
 }
+
 /**
  * 监测数据模型
  *
  * @class Observer
  */
 export default class Observer {
+	
   /**
    * 数据值
    *
@@ -19,6 +22,7 @@ export default class Observer {
    * @memberof Observer
    */
   private data: any = null;
+  
   /**
    *Creates an instance of Observer.
    * @param {any} data [需要监听的数据]
@@ -36,6 +40,7 @@ export default class Observer {
     }
     this.data = data;
   }
+  
   /**
    * 架设proxy拦截
    *
@@ -56,9 +61,9 @@ export default class Observer {
 
     const handler: ProxyHandler<any> = {
       get(target: any, property: string | number | symbol): any {
-        if (!target.hasOwnProperty(property) && typeof property === "symbol") {
-          return Reflect.get(target, property);
-        }
+        // if (!target.hasOwnProperty(property) && typeof property === "symbol") {
+        //   return Reflect.get(target, property);
+        // }
 
         // 订阅中心开始收集watcher依赖
         if (Dep.curWatcher) {
@@ -92,15 +97,14 @@ export default class Observer {
 
         target[property] = new Observer(value, `${path}__${property}`).getData();
 
-        Reflect.set(target, property, target[property]);
-
         dep.notfiy(`${path}__${property}`, arrArgs);
 
-        return true;
+        return Reflect.set(target, property, target[property]);
       },
     };
 
     const proxy: ProxyConstructor = new Proxy(data, handler);
+	
     // 添加 proxy 对象标志属性 __proxy
     Reflect.defineProperty(data, "__proxy", {
       value: 1,
@@ -108,6 +112,7 @@ export default class Observer {
       enumerable: false,
       configurable: false,
     });
+    
     return proxy;
   }
   /**

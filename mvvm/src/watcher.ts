@@ -2,6 +2,7 @@ import { cloneDeep } from "./utils";
 import Dep from "./dep";
 import { ArrArgs } from "./observer";
 import { ParserBaseClass } from "./parser/base";
+
 let id = 0;
 interface targetDictionary extends Record<string, any> {
   __proxy: 1;
@@ -14,6 +15,7 @@ export interface WatcherClass {
   get(): any;
   addDeps(...args: any[]): any;
 }
+
 interface DepWatcher {
   depCenterList: Set<any>;
   depMap: Record<string, Set<any>>;
@@ -29,37 +31,19 @@ interface DepWatcher {
  * @class Watcher
  */
 export default class Watcher implements WatcherClass {
-  /**
-   * 数组item的作用域
-   *
-   * @private
-   * @type {Record<string, any> | null}
-   * @memberof Watcher
-   */
+
+  // 数组item的作用域
   private scope: Record<string, any> | null = null;
-  /**
-   * 对应指令的解析器
-   *
-   * @private
-   * @type {ParserBaseClass}
-   * @memberof Watcher
-   */
+
+  //对应指令的解析器
   private parser: ParserBaseClass;
-  /**
-   * 旧值
-   *
-   * @private
-   * @type {*}
-   * @memberof Watcher
-   */
+
+  //旧值
   private oldVal: any = null;
-  /**
-   * 通过getter获取到的最新值
-   *
-   * @type {any}
-   * @memberof Watcher
-   */
+
+  //通过getter获取到的最新值
   public value: any = null;
+
   /**
    * 老的依赖 deps 列表
    *
@@ -71,6 +55,7 @@ export default class Watcher implements WatcherClass {
     depCenterList: new Set(),
     depMap: {},
   };
+
   /**
    * 新的依赖 deps 列表
    *
@@ -82,6 +67,7 @@ export default class Watcher implements WatcherClass {
     depCenterList: new Set(),
     depMap: {},
   };
+
   /**
    * getter 函数
    *
@@ -97,8 +83,9 @@ export default class Watcher implements WatcherClass {
       throw Error(`The attribute value:'${expression}' error parsing.`);
     }
   }
+
   /**
-   * 深度递归订阅遍历
+   * 深度递归订阅遍历， 深度递归遍历订阅
    *
    * @private
    * @param {any} target
@@ -115,7 +102,9 @@ export default class Watcher implements WatcherClass {
       this._walkThrough(target[keys[i]]);
     }
   }
+
   private id = 0;
+
   /**
    * 通过访问层级取值
    *
@@ -129,18 +118,7 @@ export default class Watcher implements WatcherClass {
     }
     return target;
   }
-  /**
-   *Creates an instance of Watcher.
-   * @param {ParserBaseClass} parser [解析器]
-   * @param {Record<string, any>} scope [item作用域]
-   * @memberof Watcher
-   */
-  public constructor(parser: ParserBaseClass, scope: Record<string, any> | null) {
-    this.parser = parser;
-    this.scope = scope;
-    this.value = this.get();
-    this.id = ++id;
-  }
+ 
   /**
    * 更新前执行的函数（深拷贝得到原始值）
    *
@@ -189,6 +167,7 @@ export default class Watcher implements WatcherClass {
     };
     return value;
   }
+
   /**
    * 设置双向绑定值
    *
@@ -207,6 +186,7 @@ export default class Watcher implements WatcherClass {
 
     data[key] = value;
   }
+
   /**
    * 添加依赖
    * @param {string} path [model路径]
@@ -224,6 +204,7 @@ export default class Watcher implements WatcherClass {
     //   dep.addDep(path, this);
     // }
   }
+
   /**
    * 移除依赖
    *
@@ -247,5 +228,18 @@ export default class Watcher implements WatcherClass {
         }
       });
     });
+  }
+
+  /**
+  *Creates an instance of Watcher.
+  * @param {ParserBaseClass} parser [解析器]
+  * @param {Record<string, any>} scope [item作用域]
+  * @memberof Watcher
+  */
+  public constructor(parser: ParserBaseClass, scope: Record<string, any> | null) {
+    this.parser = parser;
+    this.scope = scope;
+    this.value = this.get();
+    this.id = ++id;
   }
 }

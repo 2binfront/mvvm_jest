@@ -13,17 +13,20 @@ import { MVVMClass, MVVMOption } from "./mvvm";
 import { ParserBaseClass } from "./parser/base";
 
 type queueItem = [HTMLElement | Text, Record<string, any> | null];
+
 interface CollectDirOption {
   element: HTMLElement | DocumentFragment;
   isRoot: boolean;
   scope?: Record<string, any> | null;
   isInit?: boolean;
 }
+
 export interface CompilerClass {
   $queue: queueItem[];
   ms: MVVMClass | null;
   collectDir: ({ element, isRoot, scope, isInit }: CollectDirOption) => void;
 }
+
 export interface CompilerParseOption {
   node: HTMLElement | Text;
   attr?: Attr;
@@ -31,6 +34,7 @@ export interface CompilerParseOption {
   dirName?: string;
   dirValue?: string;
 }
+
 export interface ParserMaps {
   text: ParserBaseClass;
   style: ParserBaseClass;
@@ -42,6 +46,7 @@ export interface ParserMaps {
   if: ParserBaseClass;
   other: ParserBaseClass;
 }
+
 /**
  * 编译器
  *
@@ -64,6 +69,7 @@ export default class Compiler implements CompilerClass {
    * @memberof Compiler
    */
   private $fragment: DocumentFragment | null = null;
+
   /**
    * 编译完成后的回调
    *
@@ -71,6 +77,7 @@ export default class Compiler implements CompilerClass {
    * @memberof Compiler
    */
   private $mounted?: () => void;
+
   /**
    * 解析元素节点收集到的每个指令
    *
@@ -91,6 +98,7 @@ export default class Compiler implements CompilerClass {
 
     this.parseHandler({ node, dirName, dirValue, scope });
   }
+
   /**
    * 解析指令为文本节点
    *
@@ -127,40 +135,7 @@ export default class Compiler implements CompilerClass {
 
     this.parseHandler({ node, dirName: "text", dirValue, scope });
   }
-  /**
-   * - 编译收集到的每一个节点
-   * - 提取指令交给不同的编译器编译
-   *
-   * @private
-   * @param {queueItem} queueItem 指令
-   * @memberof Compiler
-   */
-  private compileNode(queueItem: queueItem): void {
-    const [node, scope] = queueItem;
 
-    if (isElement(node)) {
-      let attrs: Attr[] = [];
-      const nodeAttrs: NamedNodeMap = node.attributes;
-      const nodeAttrsLen: number = nodeAttrs.length;
-
-      for (let i = 0; i < nodeAttrsLen; i++) {
-        const attr: Attr = nodeAttrs[i];
-        if (!isDirective(attr.name)) {
-          continue;
-        }
-        if (attr.name === "v-for") {
-          attrs = [attr];
-          break;
-        }
-        attrs.push(attr);
-      }
-      attrs.map((attr: Attr): void => {
-        this.parseAttr({ node, attr, scope });
-      });
-    } else {
-      this.parseText({ node, scope });
-    }
-  }
   /**
    * 处理解析后的指令
    *
@@ -186,6 +161,7 @@ export default class Compiler implements CompilerClass {
     // 初始化视图更新
     parser.update!({ newVal: watcher.value, scope });
   }
+
   /**
    * 根据不同指令选择不同的解析器
    *
@@ -223,6 +199,7 @@ export default class Compiler implements CompilerClass {
     };
     return new parserMap[name as keyof ParserMaps]({ node, dirName, dirValue, cs: this });
   }
+
   /**
    * 收集、编译，解析完成后
    *
@@ -243,6 +220,44 @@ export default class Compiler implements CompilerClass {
       this.$mounted.call(this.ms);
     }
   }
+
+/**
+ * - 编译收集到的每一个节点
+ * - 提取指令交给不同的编译器编译
+ *
+ * @private
+ * @param {queueItem} queueItem 指令
+ * @memberof Compiler
+ */
+  private compileNode(queueItem: queueItem): void {
+    const [node, scope] = queueItem;
+
+    if (isElement(node)) {
+      let attrs: Attr[] = [];
+      const nodeAttrs: NamedNodeMap = node.attributes;
+      const nodeAttrsLen: number = nodeAttrs.length;
+
+      for (let i = 0; i < nodeAttrsLen; i++) {
+        const attr: Attr = nodeAttrs[i];
+        
+        if (!isDirective(attr.name)) {
+          continue;
+        }
+        if (attr.name === "v-for") {
+          attrs = [attr];
+          break;
+        }
+        attrs.push(attr);
+      }
+
+      attrs.map((attr: Attr): void => {
+        this.parseAttr({ node, attr, scope });
+      });
+    } else {
+      this.parseText({ node, scope });
+    }
+  }
+
   /**
    * mvvm作用域
    *
@@ -251,6 +266,7 @@ export default class Compiler implements CompilerClass {
    * @memberof Compiler
    */
   public ms: MVVMClass | null = null;
+
   /**
    * 指令缓存队列
    *
@@ -258,30 +274,7 @@ export default class Compiler implements CompilerClass {
    * @memberof Compiler
    */
   public $queue: queueItem[] = [];
-  /**
-   *Creates an instance of Compiler.
-   * @param {MVVMOption} option
-   * @param {MVVMClass} ms
-   * @memberof Compiler
-   */
-  public constructor(option: MVVMOption, ms: MVVMClass) {
-    this.$rootElement = option.view;
-    this.$mounted = option.mounted;
-    this.ms = ms;
-
-    if (isObject(option.methods)) {
-      const __eventHandler: Record<string, any> = (option.model["__eventHandler"] = {});
-      const methods: Record<string, any> = option.methods;
-      const keys: string[] = Object.keys(methods);
-
-      keys.forEach((key: string): void => {
-        ms[key] = __eventHandler[key] = methods[key];
-      });
-    }
-
-    this.$fragment = nodeToFragment(this.$rootElement!);
-    this.collectDir({ element: this.$fragment, isRoot: true, isInit: true });
-  }
+  
   /**
    * - 收集节点所有需要编译的指令
    * - 并在收集完成后编译指令列表
@@ -323,5 +316,30 @@ export default class Compiler implements CompilerClass {
       }
       this.completed(isInit!);
     }
+  }
+
+  /**
+   *Creates an instance of Compiler.
+   * @param {MVVMOption} option
+   * @param {MVVMClass} ms
+   * @memberof Compiler
+   */
+  public constructor(option: MVVMOption, ms: MVVMClass) {
+    this.$rootElement = option.view;
+    this.$mounted = option.mounted;
+    this.ms = ms;
+
+    if (isObject(option.methods)) {
+      const __eventHandler: Record<string, any> = (option.model["__eventHandler"] = {});
+      const methods: Record<string, any> = option.methods;
+      const keys: string[] = Object.keys(methods);
+
+      keys.forEach((key: string): void => {
+        ms[key] = __eventHandler[key] = methods[key];
+      });
+    }
+
+    this.$fragment = nodeToFragment(this.$rootElement!);
+    this.collectDir({ element: this.$fragment, isRoot: true, isInit: true });
   }
 }

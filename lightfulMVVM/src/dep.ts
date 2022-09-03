@@ -1,3 +1,5 @@
+
+
 export default class Dep {
     subs: {};
     static target: { uid: number; };
@@ -6,13 +8,13 @@ export default class Dep {
       this.subs= {};
     }
   
-    addSub(target: { uid: number; }) {
+    addSub(target: { uid: number; }) :void {
       this.subs[target.uid] = target;
     } 
   
-    notify() {
+    notify() :void{
       for(let uid in this.subs) {
-        this.subs[uid].update()
+        this.subs[uid].update();
       }
     }
   }

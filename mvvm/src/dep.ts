@@ -10,12 +10,14 @@ export interface DepClass {
   notfiy(key: string, arrArgs: ArrArgs): void;
   copyDep(arrayPath: string, path: string): void;
 }
+
 /**
  * 发布订阅中心
  *
  * @class Dep
  */
 export default class Dep implements DepClass {
+
   /**
    * 订阅中心(该对象收集到的需要通知 path 及对应 watcher（节点）列表)
    *
@@ -23,6 +25,7 @@ export default class Dep implements DepClass {
    * @memberof Dep
    */
   public depCenter: Record<string, Set<WatcherClass>> = {};
+
   /**
    * 当前watcher
    *
@@ -31,6 +34,7 @@ export default class Dep implements DepClass {
    * @memberof Dep
    */
   public static curWatcher: WatcherClass | null = null;
+  
   /**
    * 为 watcher 收集订阅者
    *
@@ -51,11 +55,11 @@ export default class Dep implements DepClass {
    * @param {WatcherClass} dep
    * @memberof Dep
    */
-  public addDep(path: string, dep: WatcherClass): void {
+  public addDep(path: string, watcher: WatcherClass): void {
     if (!this.depCenter[path]) {
       this.depCenter[path] = new Set();
     }
-    this.depCenter[path].add(dep);
+    this.depCenter[path].add(watcher);
   }
 
   /**
@@ -68,6 +72,7 @@ export default class Dep implements DepClass {
   public removeDep(path: string, dep: WatcherClass): void {
     this.depCenter[path].delete(dep);
   }
+
   /**
    * 通知订阅者（之前）
    *
@@ -83,6 +88,7 @@ export default class Dep implements DepClass {
       item.beforeUpdate();
     });
   }
+
   /**
    * 通知订阅者
    *
@@ -99,6 +105,7 @@ export default class Dep implements DepClass {
       item.update(arrArgs);
     });
   }
+  
   /**
    * 复制订阅列表到数组的新子元素里
    *

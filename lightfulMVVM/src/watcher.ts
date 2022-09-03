@@ -1,15 +1,20 @@
 import Dep from "./dep";
 
+export interface WatcherClass{
+  
+  update(args?: any): void;
+  get(): any;
+}
 
 let $uid=0;
-export default class Watcher {
+export default class Watcher implements WatcherClass {
 
-    exp:string;
-    callback:Function;
+    private exp:string = null;
+    callback:any;
     uid:number;
-    scope:object;
+  private scope: Record<string, any> = null ;
     
-    constructor(exp: string, scope: object, callback: Function){
+  constructor(exp: string, scope: Record<string,any>, callback: any){
 
         this.exp=exp;
         this.scope=scope;

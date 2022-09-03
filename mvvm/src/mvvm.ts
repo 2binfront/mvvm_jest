@@ -3,10 +3,14 @@ import Compiler from "./compiler";
 import Observer from "./observer";
 
 export interface MVVMClass {
+
   $data: Record<string, any>;
   [x: string]: any;
+
 }
+
 export interface MVVMOption {
+
   /**
    * mvvm根节点
    *
@@ -14,6 +18,7 @@ export interface MVVMOption {
    * @memberof MVVMOption
    */
   view: HTMLElement;
+
   /**
    * 初始data对象
    *
@@ -21,6 +26,7 @@ export interface MVVMOption {
    * @memberof MVVMOption
    */
   model: Record<string, any>;
+
   /**
    * 包含方法队列的对象
    *
@@ -28,6 +34,7 @@ export interface MVVMOption {
    * @memberof MVVMOption
    */
   methods?: Record<string, any>;
+
   /**
    * MVVM加载完成后的回调
    *
@@ -35,6 +42,7 @@ export interface MVVMOption {
    */
   mounted?: () => void;
 }
+
 /**
  * MVVM入口
  *
@@ -42,6 +50,7 @@ export interface MVVMOption {
  * @class MVVM
  */
 export default class MVVM implements MVVMClass {
+
   /**
    * 数据模型对象
    *
@@ -49,6 +58,7 @@ export default class MVVM implements MVVMClass {
    * @memberof MVVM
    */
   public $data: Record<string, any> = {};
+
   /**
    * _proxy 函数
    *
@@ -75,6 +85,7 @@ export default class MVVM implements MVVMClass {
       });
     }
   }
+
   /**
    *Creates an instance of MVVM.
    * @param {MvvmOptionInterface} option
