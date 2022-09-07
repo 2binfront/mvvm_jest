@@ -3,6 +3,8 @@ import Observer from "./observer"
 
 export interface VueClass{
     $data: Record<string, any>;
+    //$el:DocumentFragment;
+    obser:Observer|null;
     [x: string]: any;
 }
 
@@ -15,6 +17,8 @@ export interface VueOption{
 export default class Vue implements VueClass{
 
     public $data: Record<string, any> = {};
+    public $el=null;
+    public obser = null;
 
     constructor(options: VueOption){
         //获取元素 dom 对象

@@ -1,10 +1,16 @@
 import Watcher from "./watcher";
 
-// 进行模板编译
-export default class Compiler {
+interface CompilerClass{
   $el: DocumentFragment;
   context: object;
   $fragment: DocumentFragment;
+}
+
+// 进行模板编译
+export default class Compiler implements CompilerClass {
+  public $el=null;
+  public context = {};
+  public $fragment=null;
 
 
   constructor(context) {
