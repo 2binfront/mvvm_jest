@@ -1,0 +1,5 @@
+# Dependency directories
+node_modules
+mvvm/node_modules
+lightfulMVVM/node_modules
+mvvmFramework-master/node_modules
